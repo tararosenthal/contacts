@@ -15,7 +15,7 @@
   - Searching
 
 ### Code output sample:
-'''
+```
 open contact.db
 
 [menu] Enter action (add, list, search, count, exit): list
@@ -108,4 +108,4 @@ The record deleted!
 [menu] Enter action (add, list, search, count, exit): exit
 
 Process finished with exit code 0
-'''
+```
