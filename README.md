@@ -1,7 +1,7 @@
 # Contacts
 ## Contact storing application
 ### Major features include:
-- Serializtion and Deserilzation of contacts storing object (PhoneBook)
+- Serializtion and Deserilzation of contacts storing object
   - File name input through first element of command line arguments
 - Support for two types of contacts (Records):
   - Person
@@ -19,19 +19,19 @@
 open contact.db
 
 [menu] Enter action (add, list, search, count, exit): list
-1. John Smith
-2. Pizza Place
-3. Money Bank
-4. Jane Doe
+ 1. John Smith
+ 2. Pizza Place
+ 3. Money Bank
+ 4. Jane Doe
 
 [list] Enter action ([number], back): 1
-First name: John
-Last name: Smith
-Birth date: 1-1-81
-Gender: M
-Number: 555-555-5555
-Time created: 2021-09-11T22:56
-Time last edit: 2021-09-11T22:56
+ First name: John
+ Last name: Smith
+ Birth date: 1-1-81
+ Gender: M
+ Number: 555-555-5555
+ Time created: 2021-09-11T22:56
+ Time last edit: 2021-09-11T22:56
 
 
 [record] Enter action (edit, delete, menu): edit
