@@ -1,5 +1,7 @@
-package contacts.model.enums;
-
+package contacts.controller.enums;
+/*
+ * Only used with InputParser and AddFactory classes to ensure appropriate record is created before adding to Phone Book
+ */
 public enum RecordType {
     PERSON,
     ORGANIZATION,
@@ -11,25 +13,12 @@ public enum RecordType {
         return recordType;
     }
 
-    public static RecordType getRecordType(String string) {
-        switch (string.toLowerCase().trim()) {
-            case "person":
-                return PERSON;
-            case "organization":
-            case "business":
-                return ORGANIZATION;
-            default:
-                return INVALID;
-        }
-    }
-
     public static void setRecordType(String string) {
         switch (string.toLowerCase().trim()) {
             case "person":
                 recordType = PERSON;
                 break;
             case "organization":
-            case "business":
                 recordType = ORGANIZATION;
                 break;
             default:

@@ -1,7 +1,11 @@
 package contacts.model;
 
 import java.time.LocalDateTime;
-
+import java.util.HashMap;
+import java.util.Map;
+/*
+ * Person Record utilizing Builder for object creation, uses polymorphism where possible.
+ */
 public class Person extends Record{
     private String firstName;
     private String lastName;
@@ -16,14 +20,49 @@ public class Person extends Record{
         this.birthDate = birthDate;
         this.gender = gender;
     }
-
+    /*
+     * Returns full name of Record.
+     */
     @Override
     public String getName() {
         return String.format("%s %s", firstName, lastName);
     }
-
-    public String getFirstName() {
-        return firstName;
+    /*
+     * Returns all fields for entering values to create or update Record.
+     */
+    @Override
+    public String[] getFieldNames() {
+        return new String[]{"first name", "last name", "birth", "gender", "number"};
+    }
+    /*
+     * After validation, changes a given field to a given value. Requires set methods to update time of last edit.
+     */
+    @Override
+    public void changeField(String field, String value) {
+        switch (field) {
+            case "first name":
+                setFirstName(value);
+                break;
+            case "last name":
+                setLastName(value);
+                break;
+            case "birth":
+                setBirthDate(value);
+                break;
+            case "gender":
+                setGender(value);
+                break;
+            case "number":
+                setPhoneNumber(value);
+                break;
+        }
+    }
+    /*
+     * Obtains fields other than full name for searching Records.
+     */
+    @Override
+    public String getFieldValues() {
+        return birthDate + gender + getPhoneNumber();
     }
 
     public void setFirstName(String firstName) {
@@ -31,17 +70,9 @@ public class Person extends Record{
         this.setTimeUpdated(LocalDateTime.now());
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
     public void setLastName(String lastName) {
         this.lastName = lastName;
         this.setTimeUpdated(LocalDateTime.now());
-    }
-
-    public String getBirthDate() {
-        return birthDate;
     }
 
     public void setBirthDate(String birthDate) {
@@ -49,18 +80,16 @@ public class Person extends Record{
         this.setTimeUpdated(LocalDateTime.now());
     }
 
-    public String getGender() {
-        return gender;
-    }
-
     public void setGender(String gender) {
         this.gender = gender;
         this.setTimeUpdated(LocalDateTime.now());
     }
-
+    /*
+     * Formatting of output for all field values of object.
+     */
     @Override
     public String toString() {
-        return String.format("Name: %s\nSurname: %s\nBirth date: %s\nGender: %s\n" + super.toString(),
+        return String.format("First name: %s\nLast name: %s\nBirth date: %s\nGender: %s\n" + super.toString(),
                 firstName == null ? "[no data]" : firstName,
                 lastName == null ? "[no data]" : lastName,
                 birthDate == null ? "[no data]" : birthDate,
@@ -73,29 +102,31 @@ public class Person extends Record{
         private String phoneNumber;
         private String birthDate;
         private String gender;
-
-        public Builder setFirstName(String firstName) {
-            this.firstName = firstName;
-            return this;
-        }
-
-        public Builder setLastName(String lastName) {
-            this.lastName = lastName;
-            return this;
-        }
-
-        public Builder setPhoneNumber(String phoneNumber) {
-            this.phoneNumber = phoneNumber;
-            return this;
-        }
-
-        public Builder setBirthDate(String birthDate) {
-            this.birthDate = birthDate;
-            return this;
-        }
-
-        public Builder setGender(String gender) {
-            this.gender = gender;
+        /*
+         * Sets any number of fields depending on items in HashMap.
+         * @param map       contains field and value pairs
+         * @return this     for stringing together methods
+         */
+        public Builder setFields(HashMap<String, String> map) {
+            for (Map.Entry<String, String> entry: map.entrySet()) {
+                switch (entry.getKey()) {
+                    case "first name":
+                        this.firstName = entry.getValue();
+                        break;
+                    case "last name":
+                        this.lastName = entry.getValue();
+                        break;
+                    case "birth":
+                        this.birthDate = entry.getValue();
+                        break;
+                    case "gender":
+                        this.gender = entry.getValue();
+                        break;
+                    case "number":
+                        this.phoneNumber = entry.getValue();
+                        break;
+                }
+            }
             return this;
         }
 

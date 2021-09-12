@@ -1,22 +1,24 @@
 package contacts.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+/*
+ * Class for storing Record objects. One Phone Book is saved and loaded by the app using serialization and
+ * deserialization.
+ */
+public class PhoneBook implements Serializable {
+    private static final long serialVersionUID = 2L;
 
-public class PhoneBook {
-    private List<Record> records = new ArrayList<>();
+    private final List<Record> records = new ArrayList<>();
 
     public void addRecords(Record... args) {
         records.addAll(Arrays.asList(args));
     }
 
-    public void removeRecord(int index) {
+    public void deleteRecord(int index) {
         records.remove(index);
-    }
-
-    public void removeRecords(Record... args) {
-        records.removeAll(Arrays.asList(args));
     }
 
     public Record getRecord(int index) {
@@ -25,9 +27,5 @@ public class PhoneBook {
 
     public List<Record> getRecords() {
         return records;
-    }
-
-    public void setRecords(List<Record> records) {
-        this.records = records;
     }
 }

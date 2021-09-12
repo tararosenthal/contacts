@@ -1,82 +1,115 @@
 package contacts.controller;
 
+import contacts.controller.enums.AppState;
 import contacts.display.OutputInstructions;
-import contacts.model.enums.OrganizationKey;
-import contacts.model.enums.PersonKey;
-import contacts.model.enums.RecordKey;
-import contacts.model.enums.RecordType;
-
+import contacts.model.Record;
+/*
+ * Handles all validation of user input except for whether a record number is contained in a given Phone Book
+ * (handled by Update Phone Book interface)
+ */
 public class InputValidator {
+    /*
+     * Supports validation of global phone numbers.
+     */
     static boolean validNumber(String number) {
-        number = number.trim();
+        number = number.trim().toLowerCase();
         return number.matches("(?!.*\\(.*\\).*\\(.*\\).*)" + //parentheses do not surround two groups
                 "[+]?" + //optional + at start of number
                 "(\\(\\p{Alnum}+\\)|\\p{Alnum}+)" + //first group with or without parentheses, one or more alphanumeric, all other groups optional
                 "([\\s-](\\(\\p{Alnum}{2,}\\)|\\p{Alnum}{2,})" + //second group with or without parentheses, two or more alphanumeric
-                "([\\s-](\\p{Alnum}{2,})){0,3})?"); //additional groups, up to 5 total, no parentheses, two or more alphanumeric
+                "([\\s-](\\p{Alnum}{2,})){0,4})?"); //additional groups, up to 6 total, no parentheses, two or more alphanumeric
     }
-
+    /*
+     * Validation of birthdate in following formats: dd/dd/dddd, d/d/dd, dd/d/dddd, etc.
+     * Forward slashes may be replaced by hyphens.
+     */
     static boolean validBirthDate(String date) {
-        date = date.trim();
+        date = date.trim().toLowerCase();
         return date.matches("(?=(.*/.*/.*)|(.*-.*-.*))\\d{1,2}[/-]\\d{1,2}[/-](\\d{2}|\\d{4})");
     }
-
+    /*
+     * Validation of gender for m/M or f/F only.
+     */
     static boolean validGender(String gender) {
-        gender = gender.trim();
-        return gender.matches("(?i)[mf]");
+        gender = gender.trim().toLowerCase();
+        return gender.matches("[mf]");
     }
-
+    /*
+     * Validates input action based on available options for current app state.
+     */
     static boolean validAction(String action) {
-        action = action.trim();
-        return action.matches("(?i)(add)|(remove)|(edit)|(count)|(info)|(exit)");
-    }
-
-    static boolean validRecordType(String recordType) {
-        recordType = recordType.trim();
-        return recordType.matches("(?i)(person)|(organization)|(business)");
-    }
-
-    static boolean validField(String field) {
-        if (RecordType.PERSON.equals(RecordType.getRecordType())) {
-            return validPersonField(field);
-        } else {
-            return validOrganizationField(field);
-        }
-    }
-
-    static boolean validPersonField(String personField) {
-        personField = personField.trim();
-        return personField.matches("(?i)(first name)|(name)|(given name)|(surname)" +
-                "|(last name)|(birth)|(birth date)|(birthday)|(gender)|(sex)|(number)|(phone number)");
-    }
-
-    static boolean validOrganizationField(String organizationField) {
-        organizationField = organizationField.trim();
-        return organizationField.matches("(?i)(organization name)|(name)|(business name)" +
-                "|(address)|(location)|(number)|(phone number)");
-    }
-
-    static boolean validPersonValue(PersonKey personKey, String value) {
-        if ((personKey.equals(PersonKey.BIRTH_DATE) && !validBirthDate(value))
-                || (personKey.equals(PersonKey.GENDER) && !validGender(value))
-                || (personKey.equals(PersonKey.PHONE_NUMBER) && !validNumber(value))) {
-            OutputInstructions.wrongFormat(personKey);
-            return false;
-        } else return !overCharLimit(personKey, value);
-    }
-
-    static boolean validOrganizationValue(OrganizationKey organizationKey, String value) {
-        if (organizationKey.equals(OrganizationKey.PHONE_NUMBER) && !validNumber(value)) {
-            OutputInstructions.wrongFormat(organizationKey);
-            return false;
-        } else return !overCharLimit(organizationKey, value);
-    }
-
-    private static boolean overCharLimit(RecordKey recordKey, String value) {
-        if (value.length() > 100) {
-            OutputInstructions.overMaxCharLimit(recordKey);
-            return true;
+        action = action.trim().toLowerCase();
+        String[] actions = AppState.getActions();
+        for (String option: actions) {
+            if ("[number]".equals(option) && action.matches("\\d+")) {
+                return true;
+            } else if (action.matches(option)){
+                return true;
+            }
         }
         return false;
+    }
+    /*
+     * Validates record type for add record. Currently supports two options.
+     */
+    static boolean validRecordType(String recordType) {
+        recordType = recordType.trim().toLowerCase();
+        return recordType.matches("(person)|(organization)");
+    }
+    /*
+     * Prevents array out of bounds error when utilizing searchOffset
+     * @param number        input record number
+     * @param searchOffset  saved search offset from previous action, method ensures number is an index of offset
+     * @return int          ordinal position of record in Phone Book after utilizing offset, or -1 if out of bounds
+     */
+    static int validRecordNumber(int number, int[] searchOffset) {
+        if (number >= 0 && number < searchOffset.length) {
+            return searchOffset[number];
+        }
+        return -1;
+    }
+    /*
+     * Ensures user input valid field for specific record.
+     */
+    static boolean validField(String field, Record record) {
+        field = field.trim().toLowerCase();
+        for (String fieldName: record.getFieldNames()) {
+            if (field.matches(fieldName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    /*
+     * Ensures values are validated if needed before assigning to record fields.
+     */
+    static boolean validValue(String field, String value) {
+        boolean valid;
+        if (overCharLimit(value)) { //have assigned 100 chars as upper limit for values
+            OutputInstructions.overMaxCharLimit(field);
+            return false;
+        } else {
+            switch (field) {
+                case "birth":
+                    valid = validBirthDate(value);
+                    break;
+                case "gender":
+                    valid = validGender(value);
+                    break;
+                case "number":
+                    valid = validNumber(value);
+                    break;
+                default:
+                    return true;
+            }
+            if (!valid) { //this case is solely for outputting information to user
+                OutputInstructions.wrongFormat(field);
+            }
+        }
+        return valid;
+    }
+
+    private static boolean overCharLimit(String value) {
+        return value.length() > 100;
     }
 }

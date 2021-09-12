@@ -1,9 +1,14 @@
 package contacts.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-
-public abstract class Record {
+/*
+ * Abstract record class extended by Person and organization. Contains only one common changeable field: phoneNumber.
+ * Time created and updated are managed within program, are only for display, and are not changeable by user.
+ */
+public abstract class Record implements Serializable {
+    private static final long serialVersionUID = 2L;
     private String phoneNumber;
     private final LocalDateTime timeCreated;
     private LocalDateTime timeUpdated;
@@ -16,6 +21,12 @@ public abstract class Record {
 
     public abstract String getName();
 
+    public abstract String[] getFieldNames();
+
+    public abstract void changeField(String field, String value);
+
+    public abstract String getFieldValues();
+
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -23,14 +34,6 @@ public abstract class Record {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
         this.timeUpdated = LocalDateTime.now();
-    }
-
-    public LocalDateTime getTimeCreated() {
-        return timeCreated;
-    }
-
-    public LocalDateTime getTimeUpdated() {
-        return timeUpdated;
     }
 
     public void setTimeUpdated(LocalDateTime timeUpdated) {
