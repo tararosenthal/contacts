@@ -33,7 +33,6 @@ Number: 555-555-5555
 Time created: 2021-09-11T22:56
 Time last edit: 2021-09-11T22:56
 
-
 [record] Enter action (edit, delete, menu): edit
 Select a field (first name, last name, birth, gender, number): number
 Enter the number: 313-324-5678
@@ -45,7 +44,6 @@ Gender: M
 Number: 313-324-5678
 Time created: 2021-09-11T22:56
 Time last edit: 2021-09-11T22:58
-
 
 [record] Enter action (edit, delete, menu): menu
 
@@ -70,7 +68,6 @@ Number: (123) 456-7894
 Time created: 2021-09-11T23:00
 Time last edit: 2021-09-11T23:00
 
-
 [record] Enter action (edit, delete, menu): menu
 
 [menu] Enter action (add, list, search, count, exit): count
@@ -92,7 +89,6 @@ Address: 64 Pole St.
 Number: 222-223-3333
 Time created: 2021-09-11T22:57
 Time last edit: 2021-09-11T22:57
-
 
 [record] Enter action (edit, delete, menu): delete
 The record deleted!
