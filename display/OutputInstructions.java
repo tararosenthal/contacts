@@ -146,6 +146,6 @@ public class OutputInstructions {
      * @param record      to be printed
      */
     public static void printRecord(Record record) {
-        System.out.println(record.toString());
+        System.out.print(record.toString());
     }
 }
