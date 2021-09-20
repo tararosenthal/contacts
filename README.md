@@ -11,8 +11,8 @@
   - Deleting
   - Editing
   - Listing
-  - Counting
   - Searching
+  - Counting
 
 ### Code output sample:
 ```
