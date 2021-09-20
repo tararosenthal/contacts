@@ -1,8 +1,8 @@
 # Contacts
 ## Contact storing application
 ### Major features include:
-#### Serializtion and Deserilzation of contacts storing object:
-  - File name input through first element of command line arguments
+#### Serialization and Deserialization of contacts storing object:
+  - File name input as command line argument
 #### Support for two types of contacts:
   - Person
   - Organization     
