@@ -17,7 +17,7 @@ public class ContactsApp {
         PhoneBook phoneBook = serializationUtils.getPhoneBook(); //loads phone book from file or creates new
         UpdateFactory updateFactory = new UpdateFactory(phoneBook, serializationUtils); //allows updating and saving phone book
 
-        while (AppState.getAppState() != AppState.EXIT) { //should not meet this state, exiting is handled in AppState
+        while (true) { //exiting is handled in AppState
             InputParser.getAction(); //requests user input for action on Phone Book
             if (AppState.getAppState().isUpdateObject()) { //if action requires interaction with Phone Book records
                 try {
